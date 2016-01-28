@@ -1,5 +1,8 @@
 package com.smartapp.shades.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -10,21 +13,25 @@ import android.view.View;
  */
 public class ScenesView extends View {
 
-	public ScenesView(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
+	private List<Brick> mBrickList = new ArrayList<Brick>();
+
+	public ScenesView(Context context) {
+		super(context);
 	}
 
 	public ScenesView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	public ScenesView(Context context) {
-		super(context);
+	public ScenesView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
+		for (Brick brick : mBrickList) {
+			brick.draw(canvas);
+		}
 	}
 
 }

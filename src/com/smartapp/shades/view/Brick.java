@@ -20,12 +20,17 @@ public class Brick {
 	public void setColor(int color) {
 		mColor = color;
 	}
-	
-	
+
+	public void setPosition(float left, float top, float width, float height) {
+		mLeft = left;
+		mTop = top;
+		mWidth = width;
+		mHeight = height;
+	}
 
 	public void draw(Canvas canvas) {
 		mPaint.reset();
 		mPaint.setColor(mColor);
-		canvas.drawRect(mLeft, mTop, mWidth, mHeight, mPaint);
+		canvas.drawRect(mLeft, mTop, mLeft + mWidth, mTop + mHeight, mPaint);
 	}
 }
