@@ -5,7 +5,8 @@
 
     <com.smartapp.shades.view.ScenesView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@android:color/white" >
     </com.smartapp.shades.view.ScenesView>
 
 </FrameLayout>

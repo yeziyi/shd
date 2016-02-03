@@ -58,6 +58,7 @@ public class ScenesView extends View implements OnGestureListener {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
 		for (Brick brick : mBrickList) {
 			brick.draw(canvas);
 		}
