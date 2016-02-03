@@ -30,12 +30,18 @@ public class Brick {
 		mColor.initColor();
 		mColumns = columns;
 		mRows = rows;
-		mWidth = parent.getWidth() / columns;
-		mHeight = parent.getHeight() / rows;
-		mDownSpeed = mHeight / 10.0f;
+		mWidth = parent.getWidth() * 1.0f / columns;
+		mHeight = parent.getHeight() * 1.0f / rows;
+		mDownSpeed = mHeight / 12.0f;
 		mState = State.STRIP;
 		mPosition = Util.getRandomIndex(mColumns);
-		initStrip();
+		mParent.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				initStrip();
+			}
+		}, mTimeGap);
 	}
 
 	public int getPosition() {
@@ -50,24 +56,33 @@ public class Brick {
 		return mState;
 	}
 
+	public float getTop() {
+		return mTop;
+	}
+
+	public float getHeight() {
+		return mHeight;
+	}
+
 	private void initStrip() {
 		mLeft = 0;
 		mTop = mHeight / 4.0f * (-3.0f);
 		mWidth = mParent.getWidth();
 		invalidate();
-		mParent.post(new Runnable() {
+		mParent.postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
 				shorten();
 			}
-		});
+		}, mTimeGap);
 	}
 
 	private void shorten() {
-		final float leftPosition = mPosition * mWidth;
-		float leftShort = mPosition * mWidth;
-		float rightShort = (mColumns - mPosition - 1) * mWidth;
+		final float finalWidth = mParent.getWidth() * 1.0f / mColumns;
+		final float finalLeft = mPosition * finalWidth;
+		float leftShort = mPosition * finalWidth;
+		float rightShort = (mColumns - mPosition - 1) * finalWidth;
 		long shortTime = 50;
 		final float leftDistance = leftShort / (shortTime);
 		final float rightDistance = rightShort / (shortTime);
@@ -77,10 +92,11 @@ public class Brick {
 			public void run() {
 				mParent.removeCallbacks(this);
 				mLeft += leftDistance;
-				mWidth -= rightDistance;
-				if (mLeft >= leftPosition) {
-					mLeft = leftPosition;
-					mWidth = mParent.getWidth() / mColumns;
+				mWidth -= (rightDistance + leftDistance);
+				if (mWidth <= finalWidth) {
+					mLeft = finalLeft;
+					mWidth = finalWidth;
+					mState = State.DOWN;
 					invalidate();
 					godown();
 					return;
@@ -95,15 +111,8 @@ public class Brick {
 	 * 方块下落
 	 */
 	private void godown() {
-		mState = State.DOWN;
 		List<Brick> list = mParent.getSamePositionBrick(mPosition);
-		int count = 0;
-		for (Brick brick : list) {
-			if (brick != this) {
-				count++;
-			}
-		}
-		final float finalTop = (count + 1) * mHeight;
+		final float finalTop = mParent.getHeight() - (list.size() * mHeight);
 		mParent.post(new Runnable() {
 
 			@Override
@@ -133,9 +142,8 @@ public class Brick {
 	 */
 	public void merage() {
 		mState = State.MERGE;
-		final float finalTop = mTop;
+		final float finalTop = mTop + mHeight;
 		final float finalHeight = mHeight;
-		mTop = mTop - mHeight;
 		mHeight = mHeight * 2;
 		mColor.nextColor();
 		invalidate();
@@ -159,10 +167,51 @@ public class Brick {
 		});
 	}
 
-	/**
-	 * 销毁
-	 */
 	public void destory() {
+	}
+
+	public void disappearDown() {
+		mState = State.DISAPPEARDOWN;
+		final float finalTop = mTop + mHeight;
+		mParent.post(new Runnable() {
+
+			@Override
+			public void run() {
+				mParent.removeCallbacks(this);
+				mTop += mDownSpeed;
+				if (mTop >= finalTop) {
+					mTop = finalTop;
+					mState = State.STILL;
+					invalidate();
+					return;
+				}
+				invalidate();
+				mParent.postDelayed(this, mTimeGap);
+			}
+		});
+	}
+
+	public void disappear() {
+		mState = State.DISAPPEAR;
+		final float finalTop = mTop + mHeight;
+		mParent.post(new Runnable() {
+
+			@Override
+			public void run() {
+				mParent.removeCallbacks(this);
+				mTop += mDownSpeed;
+				mHeight -= mDownSpeed;
+				if (mHeight <= 0) {
+					mTop = finalTop;
+					mHeight = 0;
+					mParent.removeBrick(Brick.this);
+					invalidate();
+					return;
+				}
+				invalidate();
+				mParent.postDelayed(this, mTimeGap);
+			}
+		});
 	}
 
 	public void invalidate() {
