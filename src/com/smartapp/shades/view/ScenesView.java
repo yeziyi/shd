@@ -23,6 +23,7 @@ public class ScenesView extends View implements OnGestureListener {
 	private final int mRows = 10;
 	private GestureDetector mGestureDetector;
 	private Brick mCurrentBrick;
+	private Preview mPreview;
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 
@@ -51,6 +52,7 @@ public class ScenesView extends View implements OnGestureListener {
 	private void init() {
 		mGestureDetector = new GestureDetector(getContext(), this);
 		this.setOnTouchListener(mOnTouchListener);
+		mPreview = new Preview(this);
 	}
 
 	@Override
@@ -68,6 +70,9 @@ public class ScenesView extends View implements OnGestureListener {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		if (mPreview != null) {
+			mPreview.draw(canvas);
+		}
 		for (Brick brick : mBrickList) {
 			brick.draw(canvas);
 		}
@@ -114,22 +119,22 @@ public class ScenesView extends View implements OnGestureListener {
 									.getColor().getColor()
 							&& brick3.getColor().getColor() == brick4
 									.getColor().getColor()) {
-						brick1.disappear();
-						brick2.disappear();
-						brick3.disappear();
-						brick4.disappear();
+						brick1.preDisappear();
+						brick2.preDisappear();
+						brick3.preDisappear();
+						brick4.preDisappear();
 						for (int j = i + 1; j < mRows; j++) {
 							if (list1.size() > j) {
-								list1.get(j).disappearDown();
+								list1.get(j).preDisappearDown();
 							}
 							if (list2.size() > j) {
-								list2.get(j).disappearDown();
+								list2.get(j).preDisappearDown();
 							}
 							if (list3.size() > j) {
-								list3.get(j).disappearDown();
+								list3.get(j).preDisappearDown();
 							}
 							if (list4.size() > j) {
-								list4.get(j).disappearDown();
+								list4.get(j).preDisappearDown();
 							}
 						}
 						disappear = true;
@@ -194,9 +199,15 @@ public class ScenesView extends View implements OnGestureListener {
 	}
 
 	private void produce() {
-		Brick brick = new Brick(this, new Green(), mColumns, mRows);
+		Color color = mPreview.getColor();
+		Brick brick = new Brick(this, color, mColumns, mRows);
 		mCurrentBrick = brick;
 		mBrickList.add(brick);
+		if (mPreview != null) {
+			mPreview.setVisible(false);
+		}
+		mPreview = new Preview(this);
+		mPreview.showLater();
 	}
 
 	@Override
