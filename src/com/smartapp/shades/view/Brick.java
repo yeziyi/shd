@@ -22,17 +22,16 @@ public class Brick {
 	private final int mColumns;
 	private final int mRows;
 	private final int mPosition;
-	private final long mTimeGap = 10;
+	private final long mTimeGap = 5;
 
 	public Brick(ScenesView parent, Color color, int columns, int rows) {
 		mParent = parent;
 		mColor = color;
-		mColor.initColor();
 		mColumns = columns;
 		mRows = rows;
 		mWidth = parent.getWidth() * 1.0f / columns;
-		mHeight = parent.getHeight() * 1.0f / rows;
-		mDownSpeed = mHeight / 12.0f;
+		mHeight = parent.getHeight() * 1.0f / (rows * 1.05f);
+		mDownSpeed = mHeight / 15.0f;
 		mState = State.STRIP;
 		mPosition = Util.getRandomIndex(mColumns);
 		mParent.postDelayed(new Runnable() {
@@ -134,7 +133,11 @@ public class Brick {
 	/**
 	 * 转移位置
 	 */
-	public void transfer() {
+	public void transfer(int position) {
+		if (mPosition == position) {
+			return;
+		}
+		mState = State.TRANSFERING;
 	}
 
 	/**
@@ -170,9 +173,30 @@ public class Brick {
 	public void destory() {
 	}
 
-	public void disappearDown() {
+	public void preDisappearDown() {
+		mState = State.PREDISAPPEARDOWN;
+		final float finalTop = mTop - mHeight / 4.0f;
+		mParent.post(new Runnable() {
+
+			@Override
+			public void run() {
+				mParent.removeCallbacks(this);
+				mTop -= mDownSpeed;
+				if (mTop <= finalTop) {
+					mTop = finalTop;
+					invalidate();
+					disappearDown();
+					return;
+				}
+				invalidate();
+				mParent.postDelayed(this, mTimeGap);
+			}
+		});
+	}
+
+	private void disappearDown() {
 		mState = State.DISAPPEARDOWN;
-		final float finalTop = mTop + mHeight;
+		final float finalTop = mTop + mHeight + mHeight / 4.0f;
 		mParent.post(new Runnable() {
 
 			@Override
@@ -191,9 +215,32 @@ public class Brick {
 		});
 	}
 
-	public void disappear() {
+	public void preDisappear() {
+		mState = State.PREDISAPPEAR;
+		final float finalTop = mTop - mHeight / 4.0f;
+		mParent.post(new Runnable() {
+
+			@Override
+			public void run() {
+				mParent.removeCallbacks(this);
+				mTop -= mDownSpeed;
+				mHeight += mDownSpeed;
+				if (mTop <= finalTop) {
+					mTop = finalTop;
+					invalidate();
+					disappear();
+					return;
+				}
+				invalidate();
+				mParent.postDelayed(this, mTimeGap);
+			}
+		});
+
+	}
+
+	private void disappear() {
 		mState = State.DISAPPEAR;
-		final float finalTop = mTop + mHeight;
+		final float finalTop = mTop + mHeight + mHeight / 4.0f;
 		mParent.post(new Runnable() {
 
 			@Override
@@ -214,7 +261,7 @@ public class Brick {
 		});
 	}
 
-	public void invalidate() {
+	private void invalidate() {
 		mParent.invalidate();
 	}
 

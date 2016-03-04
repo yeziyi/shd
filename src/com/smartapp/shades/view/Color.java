@@ -7,22 +7,22 @@ public abstract class Color {
 	private int mCurrentIndex = 0;
 
 	public void initColor() {
-		int ram = Util.getRandomIndex(7);
-		if (ram == 0) {
-			if (getColorList().length % 2 == 0) {
-				mCurrentIndex = getColorList().length / 2;
-			} else {
-				mCurrentIndex = getColorList().length / 2 + 1;
-			}
-		} else {
-			if (getColorList().length % 2 == 0) {
-				int len = getColorList().length / 2;
-				mCurrentIndex = Util.getRandomIndex(len);
-			} else {
-				int len = getColorList().length / 2 + 1;
-				mCurrentIndex = Util.getRandomIndex(len);
-			}
-		}
+//		int ram = Util.getRandomIndex(7);
+//		if (ram == 0) {
+//			if (getColorList().length % 2 == 0) {
+//				mCurrentIndex = getColorList().length / 2;
+//			} else {
+//				mCurrentIndex = getColorList().length / 2 + 1;
+//			}
+//		} else {
+//			if (getColorList().length % 2 == 0) {
+//				int len = getColorList().length / 2;
+//				mCurrentIndex = Util.getRandomIndex(len);
+//			} else {
+//				int len = getColorList().length / 2 + 1;
+//				mCurrentIndex = Util.getRandomIndex(len);
+//			}
+//		}
 	}
 
 	/**
