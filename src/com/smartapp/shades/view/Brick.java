@@ -137,9 +137,29 @@ public class Brick {
 			final float finalLeft = mWidth * position;
 			final boolean rightMove = (position > mPosition) ? true : false;
 			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
-			// TODO 判断有没有障碍物
+			// 判断有没有障碍物
 			if (rightMove) {
+				for (int i = mPosition + 1; i <= position; i++) {
+					List<Brick> list = mParent.getSamePositionBrick(i);
+					if (list != null && list.size() > 0) {
+						Brick topBrick = list.get(0);
+						if (topBrick.getTop() < mTop) {
+							transfer(i - 1);
+							return;
+						}
+					}
+				}
 			} else {
+				for (int i = 0; i < mPosition; i++) {
+					List<Brick> list = mParent.getSamePositionBrick(i);
+					if (list != null && list.size() > 0) {
+						Brick topBrick = list.get(0);
+						if (topBrick.getTop() < mTop) {
+							transfer(i + 1);
+							return;
+						}
+					}
+				}
 			}
 			mState = State.TRANSFERING;
 			mPosition = position;
