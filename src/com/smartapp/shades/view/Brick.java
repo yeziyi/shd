@@ -135,7 +135,6 @@ public class Brick {
 	}
 
 	public void transfer(int position) {
-		Log.e("test", "transfer position = " + position);
 		if (mPosition == position) {
 			return;
 		}
