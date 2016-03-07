@@ -8,7 +8,6 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -212,18 +211,15 @@ public class ScenesView extends View implements OnGestureListener {
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		Log.e("test", "onDown");
 		return true;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-		Log.e("test", "onShowPress");
 	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		Log.e("test", "onSingleTapUp");
 		if (mCurrentBrick != null) {
 			float x = e.getX();
 			float width = this.getWidth() / 4.0f;
@@ -243,19 +239,16 @@ public class ScenesView extends View implements OnGestureListener {
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
-		Log.e("test", "onScroll");
 		return true;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-		Log.e("test", "onLongPress");
 	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		Log.e("test", "onFling");
 		return true;
 	}
 

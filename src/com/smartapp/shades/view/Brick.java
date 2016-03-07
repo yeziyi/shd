@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class Brick {
 
@@ -130,6 +131,7 @@ public class Brick {
 	}
 
 	public void transfer(int position) {
+		Log.e("test", "transfer position = " + position);
 		if (mPosition == position) {
 			return;
 		}
@@ -137,9 +139,6 @@ public class Brick {
 			final float finalLeft = mWidth * position;
 			final boolean rightMove = (position > mPosition) ? true : false;
 			int multiple = Math.abs(position - mPosition);
-			if (multiple > 2) {
-				multiple = 2;
-			}
 			final float moveSpeed = rightMove ? mMoveSpeed * multiple
 					: -mMoveSpeed * multiple;
 			if (rightMove) {
@@ -154,7 +153,7 @@ public class Brick {
 					}
 				}
 			} else {
-				for (int i = 0; i < mPosition; i++) {
+				for (int i = mPosition - 1; i >= position; i--) {
 					List<Brick> list = mParent.getSamePositionBrick(i);
 					if (list != null && list.size() > 0) {
 						Brick topBrick = list.get(0);
