@@ -224,6 +224,20 @@ public class ScenesView extends View implements OnGestureListener {
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
 		Log.e("test", "onSingleTapUp");
+		if (mCurrentBrick != null) {
+			float x = e.getX();
+			float width = this.getWidth() / 4.0f;
+			// TODO 要先计算能不能滑到那个位置
+			if (x >= 0 && x < width) {
+				mCurrentBrick.transfer(0);
+			} else if (x >= width && x < width * 2.0f) {
+				mCurrentBrick.transfer(1);
+			} else if (x >= width * 2.0f && x < width * 3.0) {
+				mCurrentBrick.transfer(2);
+			} else {
+				mCurrentBrick.transfer(3);
+			}
+		}
 		return true;
 	}
 

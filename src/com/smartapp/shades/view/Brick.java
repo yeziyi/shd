@@ -5,9 +5,6 @@ import java.util.List;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-/**
- * 长方形方块，自己管理形状位置的变化和界面刷新时机，然后通知场景刷新
- */
 public class Brick {
 
 	private float mLeft;
@@ -19,9 +16,10 @@ public class Brick {
 	private State mState;
 	private final ScenesView mParent;
 	private final float mDownSpeed;
+	private final float mMoveSpeed;
 	private final int mColumns;
 	private final int mRows;
-	private final int mPosition;
+	private int mPosition;
 	private final long mTimeGap = 5;
 
 	public Brick(ScenesView parent, Color color, int columns, int rows) {
@@ -32,6 +30,7 @@ public class Brick {
 		mWidth = parent.getWidth() * 1.0f / columns;
 		mHeight = parent.getHeight() * 1.0f / (rows * 1.05f);
 		mDownSpeed = mHeight / 15.0f;
+		mMoveSpeed = mWidth / 4.0f;
 		mState = State.STRIP;
 		mPosition = Util.getRandomIndex(mColumns);
 		mParent.postDelayed(new Runnable() {
@@ -106,9 +105,6 @@ public class Brick {
 		});
 	}
 
-	/**
-	 * 方块下落
-	 */
 	private void godown() {
 		List<Brick> list = mParent.getSamePositionBrick(mPosition);
 		final float finalTop = mParent.getHeight() - (list.size() * mHeight);
@@ -117,6 +113,9 @@ public class Brick {
 			@Override
 			public void run() {
 				mParent.removeCallbacks(this);
+				if (mState != State.DOWN) {
+					return;
+				}
 				mTop += mDownSpeed;
 				if (mTop >= finalTop) {
 					mTop = finalTop;
@@ -130,19 +129,37 @@ public class Brick {
 		});
 	}
 
-	/**
-	 * 转移位置
-	 */
 	public void transfer(int position) {
 		if (mPosition == position) {
 			return;
 		}
-		mState = State.TRANSFERING;
+		if (mState == State.DOWN) {
+			mState = State.TRANSFERING;
+			final float finalLeft = mWidth * position;
+			final boolean rightMove = (position > mPosition) ? true : false;
+			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
+			mPosition = position;
+			mParent.post(new Runnable() {
+
+				@Override
+				public void run() {
+					mParent.removeCallbacks(this);
+					mLeft += moveSpeed;
+					if ((rightMove && mLeft >= finalLeft)
+							|| (!rightMove && mLeft <= finalLeft)) {
+						mLeft = finalLeft;
+						mState = State.DOWN;
+						invalidate();
+						godown();
+						return;
+					}
+					invalidate();
+					mParent.postDelayed(this, mTimeGap);
+				}
+			});
+		}
 	}
 
-	/**
-	 * 合并，颜色会改变，底部不变，高度逐渐从2变变为1倍
-	 */
 	public void merage() {
 		mState = State.MERGE;
 		final float finalTop = mTop + mHeight;
