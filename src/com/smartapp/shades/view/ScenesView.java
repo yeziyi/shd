@@ -8,6 +8,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -29,8 +30,7 @@ public class ScenesView extends View implements OnGestureListener {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			mGestureDetector.onTouchEvent(event);
-			return false;
+			return mGestureDetector.onTouchEvent(event);
 		}
 	};
 
@@ -212,34 +212,38 @@ public class ScenesView extends View implements OnGestureListener {
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		return false;
+		Log.e("test", "onDown");
+		return true;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent e) {
+		Log.e("test", "onShowPress");
 	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
+		Log.e("test", "onSingleTapUp");
+		return true;
 	}
 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
-		return false;
+		Log.e("test", "onScroll");
+		return true;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent e) {
+		Log.e("test", "onLongPress");
 	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		// TODO 向下，加速当前方块
-		// TODO 左右，移动当前正在下落的方块
-		return false;
+		Log.e("test", "onFling");
+		return true;
 	}
 
 }
