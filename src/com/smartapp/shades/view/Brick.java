@@ -134,10 +134,14 @@ public class Brick {
 			return;
 		}
 		if (mState == State.DOWN) {
-			mState = State.TRANSFERING;
 			final float finalLeft = mWidth * position;
 			final boolean rightMove = (position > mPosition) ? true : false;
 			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
+			// TODO 判断有没有障碍物
+			if (rightMove) {
+			} else {
+			}
+			mState = State.TRANSFERING;
 			mPosition = position;
 			mParent.post(new Runnable() {
 

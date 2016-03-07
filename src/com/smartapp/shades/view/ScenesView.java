@@ -227,7 +227,6 @@ public class ScenesView extends View implements OnGestureListener {
 		if (mCurrentBrick != null) {
 			float x = e.getX();
 			float width = this.getWidth() / 4.0f;
-			// TODO 要先计算能不能滑到那个位置
 			if (x >= 0 && x < width) {
 				mCurrentBrick.transfer(0);
 			} else if (x >= width && x < width * 2.0f) {
