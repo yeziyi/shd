@@ -136,14 +136,18 @@ public class Brick {
 		if (mState == State.DOWN) {
 			final float finalLeft = mWidth * position;
 			final boolean rightMove = (position > mPosition) ? true : false;
-			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
-			// TODO
+			int multiple = Math.abs(position - mPosition);
+			if (multiple > 2) {
+				multiple = 2;
+			}
+			final float moveSpeed = rightMove ? mMoveSpeed * multiple
+					: -mMoveSpeed * multiple;
 			if (rightMove) {
 				for (int i = mPosition + 1; i <= position; i++) {
 					List<Brick> list = mParent.getSamePositionBrick(i);
 					if (list != null && list.size() > 0) {
 						Brick topBrick = list.get(0);
-						if (topBrick.getTop() < mTop) {
+						if (topBrick.getTop() <= mTop + mHeight) {
 							transfer(i - 1);
 							return;
 						}
@@ -154,7 +158,7 @@ public class Brick {
 					List<Brick> list = mParent.getSamePositionBrick(i);
 					if (list != null && list.size() > 0) {
 						Brick topBrick = list.get(0);
-						if (topBrick.getTop() < mTop) {
+						if (topBrick.getTop() <= mTop + mHeight) {
 							transfer(i + 1);
 							return;
 						}
