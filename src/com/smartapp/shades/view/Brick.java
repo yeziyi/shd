@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class Brick {
 
