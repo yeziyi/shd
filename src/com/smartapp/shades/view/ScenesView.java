@@ -222,7 +222,7 @@ public class ScenesView extends View implements OnGestureListener {
 	public boolean onSingleTapUp(MotionEvent e) {
 		if (mCurrentBrick != null) {
 			float x = e.getX();
-			float width = this.getWidth() / 4.0f;
+			float width = mCurrentBrick.getWidth();
 			if (x >= 0 && x < width) {
 				mCurrentBrick.transfer(0);
 			} else if (x >= width && x < width * 2.0f) {

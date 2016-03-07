@@ -63,6 +63,10 @@ public class Brick {
 		return mHeight;
 	}
 
+	public float getWidth() {
+		return mWidth;
+	}
+
 	private void initStrip() {
 		mLeft = 0;
 		mTop = mHeight / 4.0f * (-3.0f);
