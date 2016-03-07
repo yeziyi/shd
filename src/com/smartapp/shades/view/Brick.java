@@ -20,7 +20,7 @@ public class Brick {
 	private final int mColumns;
 	private final int mRows;
 	private int mPosition;
-	private final long mTimeGap = 50;
+	private final long mTimeGap = 5;
 
 	public Brick(ScenesView parent, Color color, int columns, int rows) {
 		mParent = parent;
@@ -29,7 +29,7 @@ public class Brick {
 		mRows = rows;
 		mWidth = parent.getWidth() * 1.0f / columns;
 		mHeight = parent.getHeight() * 1.0f / (rows * 1.05f);
-		mDownSpeed = mHeight / 10.0f;
+		mDownSpeed = mHeight / 15.0f;
 		mMoveSpeed = mWidth / 4.0f;
 		mState = State.STRIP;
 		mPosition = Util.getRandomIndex(mColumns);
