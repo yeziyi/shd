@@ -133,6 +133,32 @@ public class Brick {
 		});
 	}
 
+	public void quickDown() {
+		if (mState != State.DOWN) {
+			return;
+		}
+		List<Brick> list = mParent.getSamePositionBrick(mPosition);
+		final float finalTop = mParent.getHeight() - (list.size() * mHeight);
+		mState = State.QUICKDOWN;
+		mParent.post(new Runnable() {
+
+			@Override
+			public void run() {
+				mParent.removeCallbacks(this);
+				mTop += mDownSpeed;
+				mTop += mDownSpeed;
+				if (mTop >= finalTop) {
+					mTop = finalTop;
+					mState = State.STILL;
+					invalidate();
+					return;
+				}
+				invalidate();
+				mParent.postDelayed(this, mTimeGap);
+			}
+		});
+	}
+
 	public void transfer(int position) {
 		if (mPosition == position) {
 			return;

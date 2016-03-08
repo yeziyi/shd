@@ -24,6 +24,8 @@ public class ScenesView extends View implements OnGestureListener {
 	private GestureDetector mGestureDetector;
 	private Brick mCurrentBrick;
 	private Preview mPreview;
+	private final int FLING_MIN_DISTANCE = 300;
+	private final int FLING_MIN_VELOCITY = 500;
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 
@@ -249,6 +251,12 @@ public class ScenesView extends View implements OnGestureListener {
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
+		if (mCurrentBrick != null) {
+			if (e2.getY() - e1.getY() > FLING_MIN_DISTANCE
+					&& Math.abs(velocityY) > FLING_MIN_VELOCITY) {
+				mCurrentBrick.quickDown();
+			}
+		}
 		return true;
 	}
 
