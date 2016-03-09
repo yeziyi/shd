@@ -20,16 +20,17 @@ public class Brick {
 	private final int mColumns;
 	private final int mRows;
 	private int mPosition;
-	private final long mTimeGap = 5;
+	private final long mTimeGap = 16;
 
 	public Brick(ScenesView parent, Color color, int columns, int rows) {
+		// TODO 减少计算
 		mParent = parent;
 		mColor = color;
 		mColumns = columns;
 		mRows = rows;
 		mWidth = parent.getWidth() * 1.0f / columns;
 		mHeight = parent.getHeight() * 1.0f / (rows * 1.05f);
-		mDownSpeed = mHeight / 15.0f;
+		mDownSpeed = mHeight / 12.5f;
 		mMoveSpeed = mWidth / 4.0f;
 		mState = State.STRIP;
 		mPosition = Util.getRandomIndex(mColumns);

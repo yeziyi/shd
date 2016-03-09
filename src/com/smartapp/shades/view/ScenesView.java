@@ -26,6 +26,8 @@ public class ScenesView extends View implements OnGestureListener {
 	private Preview mPreview;
 	private final int FLING_MIN_DISTANCE = 150;
 	private final int FLING_MIN_VELOCITY = 250;
+	private final int FLING_MIN_DISTANCE_LR = 150;
+	private final int FLING_MIN_VELOCITY_LR = 250;
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 
@@ -61,11 +63,6 @@ public class ScenesView extends View implements OnGestureListener {
 		if (w > 0 && h > 0 && mBrickList.size() <= 0) {
 			produce();
 		}
-	}
-
-	@Override
-	public boolean performClick() {
-		return super.performClick();
 	}
 
 	@Override
@@ -252,7 +249,13 @@ public class ScenesView extends View implements OnGestureListener {
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
 		if (mCurrentBrick != null) {
-			if (e2.getY() - e1.getY() > FLING_MIN_DISTANCE
+			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE_LR
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY_LR) {
+				// TODO 向左
+			} else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE_LR
+					&& Math.abs(velocityX) > FLING_MIN_VELOCITY_LR) {
+				// TODO 向右
+			} else if (e2.getY() - e1.getY() > FLING_MIN_DISTANCE
 					&& Math.abs(velocityY) > FLING_MIN_VELOCITY) {
 				mCurrentBrick.quickDown();
 			}
