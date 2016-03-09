@@ -24,8 +24,8 @@ public class ScenesView extends View implements OnGestureListener {
 	private GestureDetector mGestureDetector;
 	private Brick mCurrentBrick;
 	private Preview mPreview;
-	private final int FLING_MIN_DISTANCE = 300;
-	private final int FLING_MIN_VELOCITY = 500;
+	private final int FLING_MIN_DISTANCE = 150;
+	private final int FLING_MIN_VELOCITY = 250;
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 
