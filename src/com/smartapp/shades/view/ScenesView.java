@@ -238,6 +238,20 @@ public class ScenesView extends View implements OnGestureListener {
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
+		if (mCurrentBrick != null
+				&& (Math.abs(distanceX) > Math.abs(distanceY) * 1.2)) {
+			float x = e2.getX();
+			float width = mCurrentBrick.getWidth();
+			if (x >= 0 && x < width) {
+				mCurrentBrick.transfer(0);
+			} else if (x >= width && x < width * 2.0f) {
+				mCurrentBrick.transfer(1);
+			} else if (x >= width * 2.0f && x < width * 3.0) {
+				mCurrentBrick.transfer(2);
+			} else {
+				mCurrentBrick.transfer(3);
+			}
+		}
 		return true;
 	}
 
@@ -251,10 +265,10 @@ public class ScenesView extends View implements OnGestureListener {
 		if (mCurrentBrick != null) {
 			if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE_LR
 					&& Math.abs(velocityX) > FLING_MIN_VELOCITY_LR) {
-				// TODO 向左
+				// 向左，不处理
 			} else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE_LR
 					&& Math.abs(velocityX) > FLING_MIN_VELOCITY_LR) {
-				// TODO 向右
+				// 向右，不处理
 			} else if (e2.getY() - e1.getY() > FLING_MIN_DISTANCE
 					&& Math.abs(velocityY) > FLING_MIN_VELOCITY) {
 				mCurrentBrick.quickDown();

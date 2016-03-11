@@ -161,15 +161,14 @@ public class Brick {
 	}
 
 	public void transfer(int position) {
+		// TODO 移动的时候也缓慢下降
 		if (mPosition == position) {
 			return;
 		}
 		if (mState == State.DOWN) {
 			final float finalLeft = mWidth * position;
 			final boolean rightMove = (position > mPosition) ? true : false;
-			int multiple = Math.abs(position - mPosition);
-			final float moveSpeed = rightMove ? mMoveSpeed * multiple
-					: -mMoveSpeed * multiple;
+			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
 			if (rightMove) {
 				for (int i = mPosition + 1; i <= position; i++) {
 					List<Brick> list = mParent.getSamePositionBrick(i);
