@@ -155,6 +155,7 @@ public class ScenesView extends View implements OnGestureListener {
 	}
 
 	public List<Brick> getSamePositionBrick(int position) {
+		// TODO 优化性能
 		List<Brick> list = new ArrayList<Brick>();
 		for (Brick brick : mBrickList) {
 			if (brick.getPosition() == position) {
@@ -176,6 +177,7 @@ public class ScenesView extends View implements OnGestureListener {
 	}
 
 	public List<Brick> getSamePositionBrickReverse(int position) {
+		// TODO 优化性能
 		List<Brick> list = new ArrayList<Brick>();
 		for (Brick brick : mBrickList) {
 			if (brick.getPosition() == position) {
