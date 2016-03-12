@@ -22,16 +22,33 @@ public class Brick {
 	private int mPosition;
 	private final long mTimeGap = 16;
 
+	private static float sWidth;
+	private static float sHeight;
+	private static float sDownSpeed;
+	private static float sMoveSpeed;
+
 	public Brick(ScenesView parent, Color color, int columns, int rows) {
-		// TODO 减少计算
+		// 减少计算
 		mParent = parent;
 		mColor = color;
 		mColumns = columns;
 		mRows = rows;
-		mWidth = parent.getWidth() * 1.0f / columns;
-		mHeight = parent.getHeight() * 1.0f / (rows * 1.05f);
-		mDownSpeed = mHeight / 12.5f;
-		mMoveSpeed = mWidth / 4.0f;
+		if (sWidth <= 0) {
+			sWidth = parent.getWidth() * 1.0f / columns;
+		}
+		if (sHeight <= 0) {
+			sHeight = parent.getHeight() * 1.0f / (rows * 1.05f);
+		}
+		if (sMoveSpeed <= 0) {
+			sMoveSpeed = sWidth / 4.0f;
+		}
+		if (sDownSpeed <= 0) {
+			sDownSpeed = sHeight / 12.5f;
+		}
+		mWidth = sWidth;
+		mHeight = sHeight;
+		mDownSpeed = sDownSpeed;
+		mMoveSpeed = sMoveSpeed;
 		mState = State.STRIP;
 		mPosition = Util.getRandomIndex(mColumns);
 		mParent.postDelayed(new Runnable() {
@@ -166,9 +183,7 @@ public class Brick {
 			return;
 		}
 		if (mState == State.DOWN) {
-			final float finalLeft = mWidth * position;
 			final boolean rightMove = (position > mPosition) ? true : false;
-			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
 			if (rightMove) {
 				for (int i = mPosition + 1; i <= position; i++) {
 					List<Brick> list = mParent.getSamePositionBrick(i);
@@ -192,6 +207,8 @@ public class Brick {
 					}
 				}
 			}
+			final float finalLeft = mWidth * position;
+			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
 			mState = State.TRANSFERING;
 			mPosition = position;
 			mParent.post(new Runnable() {
