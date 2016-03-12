@@ -84,6 +84,14 @@ public class Brick {
 		return mWidth;
 	}
 
+	public float getDownSpeed() {
+		return mDownSpeed;
+	}
+
+	public long getTimeGap() {
+		return mTimeGap;
+	}
+
 	private void initStrip() {
 		mLeft = 0;
 		mTop = mHeight / 4.0f * (-3.0f);
@@ -262,92 +270,30 @@ public class Brick {
 	public void destory() {
 	}
 
-	public void preDisappearDown() {
+	public void preDisappearDown(float distance) {
 		mState = State.PREDISAPPEARDOWN;
-		final float finalTop = mTop - mHeight / 4.0f;
-		mParent.post(new Runnable() {
-
-			@Override
-			public void run() {
-				mParent.removeCallbacks(this);
-				mTop -= mDownSpeed;
-				if (mTop <= finalTop) {
-					mTop = finalTop;
-					invalidate();
-					disappearDown();
-					return;
-				}
-				invalidate();
-				mParent.postDelayed(this, mTimeGap);
-			}
-		});
+		mTop -= distance;
 	}
 
-	private void disappearDown() {
+	public void disappearDown(float distance) {
 		mState = State.DISAPPEARDOWN;
-		final float finalTop = mTop + mHeight + mHeight / 4.0f;
-		mParent.post(new Runnable() {
-
-			@Override
-			public void run() {
-				mParent.removeCallbacks(this);
-				mTop += mDownSpeed;
-				if (mTop >= finalTop) {
-					mTop = finalTop;
-					mState = State.STILL;
-					invalidate();
-					return;
-				}
-				invalidate();
-				mParent.postDelayed(this, mTimeGap);
-			}
-		});
+		mTop += distance;
 	}
 
-	public void preDisappear() {
+	public void disappearDownFinish() {
+		mState = State.STILL;
+	}
+
+	public void preDisappear(float distance) {
 		mState = State.PREDISAPPEAR;
-		final float finalTop = mTop - mHeight / 4.0f;
-		mParent.post(new Runnable() {
-
-			@Override
-			public void run() {
-				mParent.removeCallbacks(this);
-				mTop -= mDownSpeed;
-				mHeight += mDownSpeed;
-				if (mTop <= finalTop) {
-					mTop = finalTop;
-					invalidate();
-					disappear();
-					return;
-				}
-				invalidate();
-				mParent.postDelayed(this, mTimeGap);
-			}
-		});
-
+		mTop -= distance;
+		mHeight += distance;
 	}
 
-	private void disappear() {
+	public void disappear(float distance) {
 		mState = State.DISAPPEAR;
-		final float finalTop = mTop + mHeight + mHeight / 4.0f;
-		mParent.post(new Runnable() {
-
-			@Override
-			public void run() {
-				mParent.removeCallbacks(this);
-				mTop += mDownSpeed;
-				mHeight -= mDownSpeed;
-				if (mHeight <= 0) {
-					mTop = finalTop;
-					mHeight = 0;
-					mParent.removeBrick(Brick.this);
-					invalidate();
-					return;
-				}
-				invalidate();
-				mParent.postDelayed(this, mTimeGap);
-			}
-		});
+		mTop += mDownSpeed;
+		mHeight -= mDownSpeed;
 	}
 
 	private void invalidate() {

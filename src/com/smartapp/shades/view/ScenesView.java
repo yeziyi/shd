@@ -24,10 +24,10 @@ public class ScenesView extends View implements OnGestureListener {
 	private GestureDetector mGestureDetector;
 	private Brick mCurrentBrick;
 	private Preview mPreview;
-	private final int FLING_MIN_DISTANCE = 150;
-	private final int FLING_MIN_VELOCITY = 250;
-	private final int FLING_MIN_DISTANCE_LR = 150;
-	private final int FLING_MIN_VELOCITY_LR = 250;
+	private final int FLING_MIN_DISTANCE = 100;
+	private final int FLING_MIN_VELOCITY = 200;
+	private final int FLING_MIN_DISTANCE_LR = 100;
+	private final int FLING_MIN_VELOCITY_LR = 200;
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 
@@ -117,24 +117,27 @@ public class ScenesView extends View implements OnGestureListener {
 									.getColor().getColor()
 							&& brick3.getColor().getColor() == brick4
 									.getColor().getColor()) {
-						brick1.preDisappear();
-						brick2.preDisappear();
-						brick3.preDisappear();
-						brick4.preDisappear();
+						List<Brick> preDisappearList = new ArrayList<Brick>();
+						List<Brick> preDisappearDownList = new ArrayList<Brick>();
+						preDisappearList.add(brick1);
+						preDisappearList.add(brick2);
+						preDisappearList.add(brick3);
+						preDisappearList.add(brick4);
 						for (int j = i + 1; j < mRows; j++) {
 							if (list1.size() > j) {
-								list1.get(j).preDisappearDown();
+								preDisappearDownList.add(list1.get(j));
 							}
 							if (list2.size() > j) {
-								list2.get(j).preDisappearDown();
+								preDisappearDownList.add(list2.get(j));
 							}
 							if (list3.size() > j) {
-								list3.get(j).preDisappearDown();
+								preDisappearDownList.add(list3.get(j));
 							}
 							if (list4.size() > j) {
-								list4.get(j).preDisappearDown();
+								preDisappearDownList.add(list4.get(j));
 							}
 						}
+						preDisappear(preDisappearList, preDisappearDownList);
 						disappear = true;
 						break;
 					}
@@ -146,6 +149,84 @@ public class ScenesView extends View implements OnGestureListener {
 				produce();
 			}
 		}
+	}
+
+	private float mCurrentDistance = 0;
+
+	private void preDisappear(final List<Brick> list, final List<Brick> downList) {
+		mCurrentDistance = 0;
+		if (list == null || list.size() <= 0 || downList == null) {
+			return;
+		}
+		final long timeGap = list.get(0).getTimeGap();
+		final float totalDistance = list.get(0).getHeight() / 4.0f;
+		final float distance = list.get(0).getDownSpeed();
+		post(new Runnable() {
+
+			@Override
+			public void run() {
+				removeCallbacks(this);
+				float tDistance = distance;
+				if (mCurrentDistance + tDistance > totalDistance) {
+					tDistance = totalDistance - mCurrentDistance;
+				}
+				mCurrentDistance += tDistance;
+				for (Brick brick : list) {
+					brick.preDisappear(tDistance);
+				}
+				for (Brick brick : downList) {
+					brick.preDisappearDown(tDistance);
+				}
+				if (tDistance <= 0) {
+					invalidate();
+					disappear(list, downList);
+					return;
+				}
+				invalidate();
+				postDelayed(this, timeGap);
+			}
+		});
+	}
+
+	private void disappear(final List<Brick> list, final List<Brick> downList) {
+		mCurrentDistance = 0;
+		if (list == null || list.size() <= 0 || downList == null) {
+			return;
+		}
+		final long timeGap = list.get(0).getTimeGap();
+		final float totalDistance = list.get(0).getHeight();
+		final float distance = list.get(0).getDownSpeed();
+		post(new Runnable() {
+
+			@Override
+			public void run() {
+				removeCallbacks(this);
+				float tDistance = distance;
+				if (mCurrentDistance + tDistance > totalDistance) {
+					tDistance = totalDistance - mCurrentDistance;
+				}
+				mCurrentDistance += tDistance;
+				for (Brick brick : list) {
+					brick.disappear(tDistance);
+				}
+				for (Brick brick : downList) {
+					brick.disappearDown(tDistance);
+				}
+				if (tDistance <= 0) {
+					for (Brick brick : list) {
+						brick.destory();
+						mBrickList.remove(brick);
+					}
+					for (Brick brick : downList) {
+						brick.disappearDownFinish();
+					}
+					invalidate();
+					return;
+				}
+				invalidate();
+				postDelayed(this, timeGap);
+			}
+		});
 	}
 
 	public void removeBrick(Brick brick) {
@@ -203,9 +284,7 @@ public class ScenesView extends View implements OnGestureListener {
 		Brick brick = new Brick(this, color, mColumns, mRows);
 		mCurrentBrick = brick;
 		mBrickList.add(brick);
-		if (mPreview != null) {
-			mPreview.setVisible(false);
-		}
+		mPreview.setVisible(false);
 		mPreview = new Preview(this);
 		mPreview.showLater();
 	}
