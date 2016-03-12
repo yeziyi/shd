@@ -7,13 +7,8 @@ public abstract class Color {
 	private int mCurrentIndex = 0;
 
 	public void initColor() {
-		if (getColorList().length % 2 == 0) {
-			int len = getColorList().length / 2;
-			mCurrentIndex = Util.getRandomIndex(len);
-		} else {
-			int len = getColorList().length / 2 + 1;
-			mCurrentIndex = Util.getRandomIndex(len);
-		}
+		int len = (int) (getColorList().length / 2.0 + 0.5);
+		mCurrentIndex = Util.getRandomIndex(len);
 	}
 
 	/**
