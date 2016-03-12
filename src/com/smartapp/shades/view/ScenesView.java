@@ -26,8 +26,8 @@ public class ScenesView extends View implements OnGestureListener {
 	private Preview mPreview;
 	private final int FLING_MIN_DISTANCE = 100;
 	private final int FLING_MIN_VELOCITY = 200;
-	private final int FLING_MIN_DISTANCE_LR = 100;
-	private final int FLING_MIN_VELOCITY_LR = 200;
+	private final int FLING_MIN_DISTANCE_LR = 150;
+	private final int FLING_MIN_VELOCITY_LR = 250;
 
 	private OnTouchListener mOnTouchListener = new OnTouchListener() {
 
@@ -304,13 +304,13 @@ public class ScenesView extends View implements OnGestureListener {
 			float x = e.getX();
 			float width = mCurrentBrick.getWidth();
 			if (x >= 0 && x < width) {
-				mCurrentBrick.transfer(0);
+				mCurrentBrick.transfer(0, false);
 			} else if (x >= width && x < width * 2.0f) {
-				mCurrentBrick.transfer(1);
+				mCurrentBrick.transfer(1, false);
 			} else if (x >= width * 2.0f && x < width * 3.0) {
-				mCurrentBrick.transfer(2);
+				mCurrentBrick.transfer(2, false);
 			} else {
-				mCurrentBrick.transfer(3);
+				mCurrentBrick.transfer(3, false);
 			}
 		}
 		return true;
@@ -324,13 +324,13 @@ public class ScenesView extends View implements OnGestureListener {
 			float x = e2.getX();
 			float width = mCurrentBrick.getWidth();
 			if (x >= 0 && x < width) {
-				mCurrentBrick.transfer(0);
+				mCurrentBrick.transfer(0, true);
 			} else if (x >= width && x < width * 2.0f) {
-				mCurrentBrick.transfer(1);
+				mCurrentBrick.transfer(1, true);
 			} else if (x >= width * 2.0f && x < width * 3.0) {
-				mCurrentBrick.transfer(2);
+				mCurrentBrick.transfer(2, true);
 			} else {
-				mCurrentBrick.transfer(3);
+				mCurrentBrick.transfer(3, true);
 			}
 		}
 		return true;

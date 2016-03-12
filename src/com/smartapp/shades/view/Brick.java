@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class Brick {
 
@@ -136,8 +137,12 @@ public class Brick {
 	}
 
 	private void godown() {
+		Log.e("test", "godown mPosition = " + mPosition);
 		List<Brick> list = mParent.getSamePositionBrick(mPosition);
+		Log.e("test", "godown list.size() = " + list.size());
 		final float finalTop = mParent.getHeight() - (list.size() * mHeight);
+		Log.e("test", "godown finalTop = " + finalTop);
+		Log.e("test", "godown mDownSpeed = " + mDownSpeed);
 		mParent.post(new Runnable() {
 
 			@Override
@@ -163,6 +168,7 @@ public class Brick {
 		if (mState != State.DOWN) {
 			return;
 		}
+		Log.e("test", "==========quickDown mPosition = " + mPosition);
 		List<Brick> list = mParent.getSamePositionBrick(mPosition);
 		final float finalTop = mParent.getHeight() - (list.size() * mHeight);
 		mState = State.QUICKDOWN;
@@ -171,6 +177,7 @@ public class Brick {
 			@Override
 			public void run() {
 				mParent.removeCallbacks(this);
+				mTop += mDownSpeed;
 				mTop += mDownSpeed;
 				mTop += mDownSpeed;
 				if (mTop >= finalTop) {
@@ -185,7 +192,7 @@ public class Brick {
 		});
 	}
 
-	public void transfer(int position) {
+	public void transfer(int position, boolean quick) {
 		// TODO 移动的时候也缓慢下降
 		if (mPosition == position) {
 			return;
@@ -198,7 +205,7 @@ public class Brick {
 					if (list != null && list.size() > 0) {
 						Brick topBrick = list.get(0);
 						if (topBrick.getTop() <= mTop + mHeight) {
-							transfer(i - 1);
+							transfer(i - 1, quick);
 							return;
 						}
 					}
@@ -209,14 +216,16 @@ public class Brick {
 					if (list != null && list.size() > 0) {
 						Brick topBrick = list.get(0);
 						if (topBrick.getTop() <= mTop + mHeight) {
-							transfer(i + 1);
+							transfer(i + 1, quick);
 							return;
 						}
 					}
 				}
 			}
+			Log.e("test", "transfer position = " + position);
 			final float finalLeft = mWidth * position;
-			final float moveSpeed = rightMove ? mMoveSpeed : -mMoveSpeed;
+			final float moveSpeed = (quick ? 100 : 1)
+					* (rightMove ? mMoveSpeed : -mMoveSpeed);
 			mState = State.TRANSFERING;
 			mPosition = position;
 			mParent.post(new Runnable() {
