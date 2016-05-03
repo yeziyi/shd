@@ -357,5 +357,4 @@ public class ScenesView extends View implements OnGestureListener {
 		}
 		return true;
 	}
-
 }
